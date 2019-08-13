@@ -1,12 +1,18 @@
 import scrapy
 
 
-class QuotesSpider(scrapy.Spider):
+class DataSpider(scrapy.Spider):
     name = "interpol_spider"
-
-    def start_requests(self):
-        pass
+    start_urls = [
+        'https://www.interpol.int/How-we-work/Notices/View-Red-Notices',
+    ]
 
     def parse(self, response):
-        pass
 
+        for item in response.css('div.content div.theme div.containerMarginRight '
+                                 'div.twoColumns div.twoColumns__rightColumn div.redNoticesList '
+                                 'div.redNoticesList__ajaxContainer div.redNoticesList__list '
+                                 'div.redNoticesList__listWrapper'):
+            yield {
+                'item': item.css('div.redNoticeItem').get()
+            }
